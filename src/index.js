@@ -1,15 +1,16 @@
-import ENV from "./env"
-import {dbInit} from "mongo-registry"
-import {registry} from "./dbRegistry"
-import startExpress from "express-blueforest"
+import {watchCollections} from "./watch"
 
-const errorMapper = err => {
-    if (err.code === 11000) {
-        err.status = 400
-        err.body = {errorCode: 1, message: "allready exists"}
-    }
-}
+const debug = require('debug')('api:search:alim')
 
-export default dbInit(ENV, registry)
-    .then(startExpress(ENV, errorMapper))
-    .catch(e => console.error("BOOT ERROR\n",e))
+import mongodb from 'mongodb'
+import ENV from './env'
+
+const auth = ENV => (ENV.DB_USER && ENV.DB_PWD) ? (ENV.DB_USER + ":" + ENV.DB_PWD + "@") : ""
+
+let conn = `mongodb://${auth(ENV)}${ENV.DB_HOST}:${ENV.DB_PORT}/${ENV.DB_NAME}?authSource=admin`
+
+debug("conncting to %o",conn)
+
+mongodb.MongoClient.connect(conn, {useNewUrlParser: true})
+    .then(client => client.db(ENV.DB_NAME))
+    .then(watchCollections)
