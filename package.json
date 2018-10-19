@@ -1,6 +1,6 @@
 {
   "name": "search-alim",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "watch normalized collections to build search collection",
   "main": "dist/index.js",
   "repository": "https://github.com/BlueForestTrees/search-alim.git",

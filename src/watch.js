@@ -5,11 +5,16 @@ const debug = require('debug')('api:search:alim')
 export const watchCollections = async bfdb => {
     debug("connected")
 
-    const collection = bfdb.collection(cols.TRUNK)
-    const changeStream = collection.watch()
+    const trunk = bfdb.collection("test")
 
-    let next
-    while (next = await changeStream.next()) {
-        debug("un hcahge! %o", next)
-    }
+    await trunk.insertOne({hello: "world", how: "are you"})
+    debug(await trunk.findOne({hello: "world"}))
+
+
+    // const changeStream = collection.watch()
+    //
+    // let next
+    // while (next = await changeStream.next()) {
+    //     debug("un hcahge! %o", next)
+    // }
 }
